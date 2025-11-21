@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App - Real-time Forecast</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Get real-time weather information for any city worldwide. Simple, accurate, and beautiful weather forecasts.">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-cloud-sun"></i>
+                    <h1>Weather</h1>
+                </div>
+                <p class="subtitle">Real-time weather for any city</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input 
+                            type="text" 
+                            id="cityInput" 
+                            placeholder="Enter city name (e.g., New York, London, Tokyo)"
+                            autocomplete="off"
+                            maxlength="50"
+                        >
+                        <button id="searchBtn" class="search-btn">
+                            <i class="fas fa-search"></i>
+                            <span>Get Weather</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Recent Searches -->
+                    <div class="recent-searches" id="recentSearches">
+                        <h3>Recent Searches</h3>
+                        <div class="searches-list" id="searchesList">
+                            <!-- Dynamic content loaded by JavaScript -->
+                        </div>
+                        <button id="clearSearches" class="clear-btn" style="display: none;">
+                            <i class="fas fa-trash"></i>
+                            Clear All
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <section class="loading-state" id="loadingState" style="display: none;">
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Fetching weather data...</p>
+                    <p class="loading-subtext">Please wait while we get the latest forecast</p>
+                </div>
+            </section>
+
+            <!-- Error State -->
+            <section class="error-state" id="errorState" style="display: none;">
+                <div class="error-container">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h2 class="error-title">Oops! Something went wrong</h2>
+                    <p class="error-message" id="errorMessage">Unable to fetch weather data. Please try again.</p>
+                    <div class="error-actions">
+                        <button id="retryBtn" class="btn btn-primary">
+                            <i class="fas fa-redo"></i>
+                            Try Again
+                        </button>
+                        <button id="newSearchBtn" class="btn btn-secondary">
+                            <i class="fas fa-search"></i>
+                            New Search
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Weather Display -->
+            <section class="weather-display" id="weatherDisplay" style="display: none;">
+                <!-- Current Weather -->
+                <div class="current-weather">
+                    <div class="weather-header">
+                        <div class="location-info">
+                            <h2 class="city-name" id="cityName">Loading...</h2>
+                            <p class="current-time" id="currentTime"></p>
+                            <p class="last-updated" id="lastUpdated"></p>
+                        </div>
+                        <div class="weather-icon-container">
+                            <div class="weather-icon" id="weatherIcon">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="temperature-container">
+                        <div class="main-temp">
+                            <span class="temp-value" id="tempValue">0</span>
+                            <span class="temp-unit" id="tempUnit">°C</span>
+                        </div>
+                        <div class="temp-feeling">
+                            <span class="feels-like-label">Feels like</span>
+                            <span class="feels-like-value" id="feelsLike">0°</span>
+                        </div>
+                    </div>
+
+                    <div class="weather-details">
+                        <div class="detail-item">
+                            <span class="detail-icon"><i class="fas fa-tint"></i></span>
+                            <span class="detail-label">Humidity</span>
+                            <span class="detail-value" id="humidity">--%</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon"><i class="fas fa-wind"></i></span>
+                            <span class="detail-label">Wind</span>
+                            <span class="detail-value" id="wind">-- mph</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon"><i class="fas fa-eye"></i></span>
+                            <span class="detail-label">Visibility</span>
+                            <span class="detail-value" id="visibility">-- mi</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon"><i class="fas fa-compress-arrows-alt"></i></span>
+                            <span class="detail-label">Pressure</span>
+                            <span class="detail-value" id="pressure">-- hPa</span>
+                        </div>
+                    </div>
+
+                    <div class="weather-description" id="weatherDescription">
+                        <p>Loading weather description...</p>
+                    </div>
+                </div>
+
+                <!-- Additional Weather Info -->
+                <div class="weather-info-grid">
+                    <div class="info-card sunrise-sunset">
+                        <div class="info-header">
+                            <i class="fas fa-sun"></i>
+                            <span>Sunrise & Sunset</span>
+                        </div>
+                        <div class="info-content">
+                            <div class="sun-info">
+                                <span class="sun-label">Sunrise</span>
+                                <span class="sun-value" id="sunrise">--:--</span>
+                            </div>
+                            <div class="sun-info">
+                                <span class="sun-label">Sunset</span>
+                                <span class="sun-value" id="sunset">--:--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card uv-index">
+                        <div class="info-header">
+                            <i class="fas fa-radiation"></i>
+                            <span>UV Index</span>
+                        </div>
+                        <div class="info-content">
+                            <div class="uv-container">
+                                <span class="uv-value" id="uvIndex">--</span>
+                                <div class="uv-bar">
+                                    <div class="uv-fill" id="uvFill"></div>
+                                </div>
+                            </div>
+                            <p class="uv-description" id="uvDescription">No UV data available</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card air-quality">
+                        <div class="info-header">
+                            <i class="fas fa-lungs"></i>
+                            <span>Air Quality</span>
+                        </div>
+                        <div class="info-content">
+                            <div class="aq-container">
+                                <span class="aq-index" id="aqIndex">--</span>
+                                <div class="aq-color" id="aqColor"></div>
+                            </div>
+                            <p class="aq-description" id="aqDescription">Air quality data not available</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hourly Forecast -->
+                <section class="hourly-forecast">
+                    <div class="section-header">
+                        <h3>Hourly Forecast</h3>
+                        <a href="#" class="view-more" id="viewHourly">View All →</a>
+                    </div>
+                    <div class="hourly-scroll-container">
+                        <div class="hourly-grid" id="hourlyGrid">
+                            <!-- Dynamic hourly forecast cards -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5-Day Forecast -->
+                <section class="daily-forecast">
+                    <div class="section-header">
+                        <h3>5-Day Forecast</h3>
+                    </div>
+                    <div class="daily-grid" id="dailyGrid">
+                        <!-- Dynamic 5-day forecast cards -->
+                    </div>
+                </section>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>&copy; 2025 Weather App. Built with ❤️ for demonstration purposes.</p>
+                <p class="data-source">Weather data provided by OpenWeatherMap API</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Service Worker for Offline Support (Optional) -->
+    <script>
+        // Register service worker if supported
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(error => console.log('SW registration failed'));
+            });
+        }
+    </script>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
