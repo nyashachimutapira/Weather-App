@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Weather App API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"Secret123!\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/user/register", "host": ["{{baseUrl}}"], "path": ["api","user","register"] }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Secret123!\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/user/login", "host": ["{{baseUrl}}"], "path": ["api","user","login"] }
+      }
+    },
+    {
+      "name": "Get Current Weather (public)",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/weather/current?city=London", "host": ["{{baseUrl}}"], "path": ["api","weather","current"], "query": [ { "key": "city", "value": "London" } ] }
+      }
+    },
+    {
+      "name": "Get Current Weather (auth)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/api/weather/current?city=Paris", "host": ["{{baseUrl}}"], "path": ["api","weather","current"], "query": [ { "key": "city", "value": "Paris" } ] }
+      }
+    },
+    {
+      "name": "Get My Searches",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/api/my-searches", "host": ["{{baseUrl}}"], "path": ["api","my-searches"] }
+      }
+    }
+  ]
+}
